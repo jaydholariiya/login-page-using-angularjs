@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="angular.js"></script>
+    <script src="shop.js"></script>
+</head>
+
+<body ng-app="ShopModule" ng-controller="ShopController" ng-init="login = 0">
+    <div class="container" style="width:500px;margin-top:2%">
+        <p style="color:red" ng-if="login == -1">{{message}}</p>
+        <form  ng-if="login == 0 || login == -1">
+            <div class="form-group">
+                <label for="unm">Enter Username</label>
+                <input type="text" name="unm" value="Admin" id="unm" ng-model="User.unm" class="form-control"><br>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Enter Password</label>
+                <input type="text" value="Admin" name="pwd" id="pwd" ng-model="User.pwd" class="form-control"><br>
+            </div>
+            <center><button type="submit" class="btn btn-info" ng-click="ValidateUser(User)">LOGIN</button></center>
+        </form>
+    </div> 
+    <div class="container"  ng-if="login == 1">
+    
+    <!-- <div class="container"> -->
+        <label for="">Select Your Category</label>
+        <select ng-options="item.productCategory for item in productList" ng-model="product"></select>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Product Category</th>
+                    <th>Product Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in productList | orderBy:'productName' | filter:product track by $index">
+                    <td>{{item.productId}}</td>
+                    <td><img ng-src="Images/{{item.productImage}}" height="100px" width="100px"></td>
+                    <td>{{item.productName | uppercase}}</td>
+                    <td>{{item.productCategory | uppercase}}</td>
+                    <td>{{item.productPrice | currency:"₹"}}</td>
+                    <td>
+                        
+                        <button class="btn btn-info" ng-click="SingleProduct(item)">Update</button>
+                        <button class="btn btn-danger" ng-click="DeleteProduct(item.productId)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container" style="width:600px" ng-show="edit" ng-if="login == 1">
+        <form action="/api/insertProduct" method="post">
+            <div class="form-group">
+                <label for="pnm">Enter Product Id</label>
+                <input type="text" name="productId" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Name</label>
+                <input type="text" name="productName" class="form-control"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Image</label>
+                <input type="text" name="productImage" class="form-control"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Category</label>
+                <input type="text" name="productCategory" class="form-control"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Price</label>
+                <input type="text" name="productPrice" class="form-control"><br>
+            </div>
+            <button class="btn btn-success">Add Product</button>
+        </form>
+    </div>
+    <div class="container" style="width:600px" ng-hide="edit" ng-if="login == 1">
+        <form ng-submit="UpdateProduct(Update)">
+            <div class="form-group">
+                <label for="pnm">Enter Product Id</label>
+                <input type="text" name="productId" class="form-control" ng-model="Update.productId">
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Name</label>
+                <input type="text" name="productName" class="form-control" ng-model="Update.productName"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Image</label>
+                <input type="text" name="productImage" class="form-control" ng-model="Update.productImage"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Category</label>
+                <input type="text" name="productCategory" class="form-control" ng-model="Update.productCategory"><br>
+            </div>
+            <div class="form-group">
+                <label for="pnm">Enter Product Price</label>
+                <input type="text" name="productPrice" class="form-control" ng-model="Update.productPrice" ><br>
+            </div>
+            <button class="btn btn-info">Update Product</button>
+        </form>
+    </div>
+</body>
+
+</html>
